@@ -1,0 +1,7 @@
+---
+- name: Run unit tests for the Go application
+  command: go test 
+  args:
+    chdir: "{{ repo_path }}/src"
+  become: yes
+  when: ansible_system == "Darwin" 

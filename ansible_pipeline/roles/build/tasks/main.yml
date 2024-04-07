@@ -1,0 +1,11 @@
+- name: Get gopath
+  ansible.builtin.shell:
+    cmd:  go env GOPATH
+  register: gopath
+
+- name: Build the Go application
+  command: go build -o {{ repo_path }}/src/bin/app {{ repo_path }}/src/main.go
+  args:
+    chdir: "{{ repo_path }}/src"
+  become: yes
+  when: ansible_system == "Darwin"  

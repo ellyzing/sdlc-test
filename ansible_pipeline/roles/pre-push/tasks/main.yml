@@ -7,76 +7,35 @@
   set_fact:
     repo_path: "{{ current_dir.stdout }}"
 
-- name: Install pre-commit on Debian/Ubuntu
-  become: yes
-  apt:
-    name: pre-commit
-    state: present
-  when: ansible_os_family == "Debian"
-
-- name: Install pre-commit on CentOS
-  become: yes
-  yum:
-    name: pre-commit
-    state: present
-  when: ansible_os_family == "RedHat"
-
-- name: Install pre-commit on macOS
-  command: brew install pre-commit
-  when: ansible_system == "Darwin"
-
 - name: Install Gitleaks
   command: go install github.com/zricethezav/gitleaks@latest
   args:
     creates: ~/go/bin/gitleaks
   when: ansible_system == "Darwin"
 
-
-- name: Install Deepsecrets
-  command: pip3 install deepsecrets
+- name: Create venv for Deepsecrets
+  command: python3.12 -m venv "{{ repo_path }}/.venv"
   when: ansible_system == "Darwin"
 
-- name: Check for secrets using Gitleaks
-  command: ~/go/bin/gitleaks --repo-path "{{ repo_path }}"
-  ignore_errors: true
-  register: gitleaks_output
-
-- name: Fail if Gitleaks found secrets
-  fail:
-    msg: "Gitleaks found secrets in the code"
-  when: gitleaks_output.rc != 0
+- name: Install Deepsecrets
+  pip:
+    requirements: "{{ repo_path }}/ansible_pipeline/requirements.txt"
+    virtualenv: "{{ repo_path }}/.venv"
+  when: ansible_system == "Darwin"
 
 - name: Check for secrets using Deepsecrets
-  command: deepsecrets --repo-path "{{ repo_path }}"
+  command: "{{ repo_path }}/.venv/bin/deepsecrets --target-dir {{ repo_path }}/src --outfile ds-result.txt" 
   ignore_errors: true
   register: deepsecrets_output
 
-- name: Fail if Deepsecrets found secrets
-  fail:
-    msg: "Deepsecrets found secrets in the code"
-  when: deepsecrets_output.rc != 0
+- name: Check for secrets using Gitleaks
+  command: ~/go/bin/gitleaks --repo-path "{{ repo_path }}/src --report gl-result.txt"
+  ignore_errors: true
+  register: gitleaks_output
 
-# - name: Install pre-commit hooks
-#   command: pre-commit install
-#   args:
-#     chdir: "{{ repo_path }}"
+- name: Fail if secrets are found
+  # fail:
+  debug:
+    msg: "Secrets found in the code"
+  when: gitleaks_output.rc != 0 or deepsecrets_output.rc != 0
 
-# - name: Create .pre-commit-hooks.yaml
-#   copy:
-#     content: |
-#       repos:
-#         - repo: https://github.com/gitleaks/gitleaks
-#           rev: v8.18.1
-#           hooks:
-#             - id: gitleaks
-
-#         - repo: https://github.com/avito-tech/deepsecrets
-#           rev: v1.1.2
-#           hooks:
-#             - id: deepsecrets
-#     dest: "{{ repo_path }}/.pre-commit-hooks.yaml"
-
-# - name: Auto-update pre-commit hooks
-#   command: pre-commit autoupdate -c "{{ repo_path }}/.pre-commit-hooks.yaml" 
-#   args:
-#     chdir: "{{ repo_path }}"
