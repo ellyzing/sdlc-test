@@ -25,27 +25,58 @@
   command: brew install pre-commit
   when: ansible_system == "Darwin"
 
-- name: Install pre-commit hooks
-  command: pre-commit install
+- name: Install Gitleaks
+  command: go install github.com/zricethezav/gitleaks@latest
   args:
-    chdir: "{{ repo_path }}"
+    creates: ~/go/bin/gitleaks
+  when: ansible_system == "Darwin"
 
-- name: Create .pre-commit-hooks.yaml
-  copy:
-    content: |
-      repos:
-        - repo: https://github.com/gitleaks/gitleaks
-          rev: v8.18.1
-          hooks:
-            - id: gitleaks
 
-        - repo: https://github.com/avito-tech/deepsecrets
-          rev: v1.1.2
-          hooks:
-            - id: deepsecrets
-    dest: "{{ repo_path }}/.pre-commit-hooks.yaml"
+- name: Install Deepsecrets
+  command: pip3 install deepsecrets
+  when: ansible_system == "Darwin"
 
-- name: Auto-update pre-commit hooks
-  command: pre-commit autoupdate -c "{{ repo_path }}/.pre-commit-hooks.yaml" --no-verify
-  args:
-    chdir: "{{ repo_path }}"
+- name: Check for secrets using Gitleaks
+  command: ~/go/bin/gitleaks --repo-path "{{ repo_path }}"
+  ignore_errors: true
+  register: gitleaks_output
+
+- name: Fail if Gitleaks found secrets
+  fail:
+    msg: "Gitleaks found secrets in the code"
+  when: gitleaks_output.rc != 0
+
+- name: Check for secrets using Deepsecrets
+  command: deepsecrets --repo-path "{{ repo_path }}"
+  ignore_errors: true
+  register: deepsecrets_output
+
+- name: Fail if Deepsecrets found secrets
+  fail:
+    msg: "Deepsecrets found secrets in the code"
+  when: deepsecrets_output.rc != 0
+
+# - name: Install pre-commit hooks
+#   command: pre-commit install
+#   args:
+#     chdir: "{{ repo_path }}"
+
+# - name: Create .pre-commit-hooks.yaml
+#   copy:
+#     content: |
+#       repos:
+#         - repo: https://github.com/gitleaks/gitleaks
+#           rev: v8.18.1
+#           hooks:
+#             - id: gitleaks
+
+#         - repo: https://github.com/avito-tech/deepsecrets
+#           rev: v1.1.2
+#           hooks:
+#             - id: deepsecrets
+#     dest: "{{ repo_path }}/.pre-commit-hooks.yaml"
+
+# - name: Auto-update pre-commit hooks
+#   command: pre-commit autoupdate -c "{{ repo_path }}/.pre-commit-hooks.yaml" 
+#   args:
+#     chdir: "{{ repo_path }}"
