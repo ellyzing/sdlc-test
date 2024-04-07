@@ -1,0 +1,6 @@
+---
+- name: Git Pre-push Pipeline
+  hosts: localhost
+  gather_facts: true
+  roles:
+    - pre-push
