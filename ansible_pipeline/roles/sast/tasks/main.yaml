@@ -1,0 +1,21 @@
+---
+- name: Install semgrep
+  pip:
+    name: semgrep
+    virtualenv: "{{ repo_path }}/.venv"
+    state: present
+
+- name: Analyze code using Semgrep
+  command: "{{ repo_path }}/.venv/bin/semgrep --config=auto --json --output {{ repo_path }}/semgrep-result.json {{ repo_path }}/src"
+  become: yes
+
+- name: Read Semgrep results file
+  ansible.builtin.slurp:
+    path: "{{ repo_path }}/semgrep-result.json"
+  register: semgrep_results
+
+- name: Fail if vulnerabilities are found
+  # fail:
+  debug:
+    msg: "Vulnerabilities found in the code: {{ semgrep_results.content | b64decode }}"
+  when: semgrep_results.content | b64decode | from_json | json_query('results') | length > 0

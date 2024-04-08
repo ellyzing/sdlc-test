@@ -1,0 +1,8 @@
+- name: Get current directory
+  ansible.builtin.shell:
+    cmd: cd ../ ; pwd
+  register: current_dir
+
+- name: Set repo directory path
+  set_fact:
+    repo_path: "{{ current_dir.stdout }}"

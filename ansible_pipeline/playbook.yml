@@ -1,8 +1,11 @@
 ---
-- name: Git Pre-push Pipeline
+- name: SDLC task
   hosts: localhost
   gather_facts: true
   roles:
-    - pre-push
-    - build
-    - unit-tests
+    - prepare
+    # - pre-push
+    # - build
+    # - unit-tests
+    # - sast
+    - defectdojo

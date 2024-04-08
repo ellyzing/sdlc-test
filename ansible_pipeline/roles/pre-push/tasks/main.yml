@@ -1,12 +1,3 @@
-- name: Get current directory
-  ansible.builtin.shell:
-    cmd: cd ../ ; pwd
-  register: current_dir
-
-- name: Set repo directory path
-  set_fact:
-    repo_path: "{{ current_dir.stdout }}"
-
 - name: Install Gitleaks
   command: go install github.com/zricethezav/gitleaks@latest
   args:
@@ -24,12 +15,12 @@
   when: ansible_system == "Darwin"
 
 - name: Check for secrets using Deepsecrets
-  command: "{{ repo_path }}/.venv/bin/deepsecrets --target-dir {{ repo_path }}/src --outfile ds-result.txt" 
+  command: "{{ repo_path }}/.venv/bin/deepsecrets --target-dir {{ repo_path }} --outfile {{ repo_path }}/ds-result.json" 
   ignore_errors: true
   register: deepsecrets_output
 
 - name: Check for secrets using Gitleaks
-  command: ~/go/bin/gitleaks --repo-path "{{ repo_path }}/src --report gl-result.txt"
+  command: "~/go/bin/gitleaks --repo-path {{ repo_path }} --report {{ repo_path }}/gl-result.json"
   ignore_errors: true
   register: gitleaks_output
 
