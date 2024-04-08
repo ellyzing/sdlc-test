@@ -2,6 +2,6 @@
 	path = django-DefectDojo
 	url = https://github.com/DefectDojo/django-DefectDojo.git
 
-[submodule "govwa"]
+[submodule "src/gowva"]
 	path = src/gowva
 	url = https://github.com/0c34/govwa.git
