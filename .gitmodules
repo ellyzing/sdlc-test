@@ -1,0 +1,7 @@
+[submodule "django-DefectDojo"]
+	path = django-DefectDojo
+	url = https://github.com/DefectDojo/django-DefectDojo.git
+
+[submodule "govwa"]
+	path = src/gowva
+	url = https://github.com/0c34/govwa.git

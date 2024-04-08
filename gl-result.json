@@ -1,0 +1,74 @@
+[
+{
+	"line": "\tawsToken := \"AKIALALEMEL33243OLIA\"",
+	"commit": "334cd7ba17363aee1d07bcfbac8c76f5a6d09576",
+	"offender": "AKIALALEMEL33243OLIA",
+	"reason": "AWS",
+	"commitMsg": "first commit ",
+	"author": "coal",
+	"email": "unknown",
+	"file": "api/ignoreCommit.go",
+	"repo": ".",
+	"date": "2024-04-07T14:14:53+03:00"
+},
+{
+	"line": "\tawsToken := \"AKIALALEMEL33243OLIA\"",
+	"commit": "334cd7ba17363aee1d07bcfbac8c76f5a6d09576",
+	"offender": "AKIALALEMEL33243OLIA",
+	"reason": "AWS",
+	"commitMsg": "first commit ",
+	"author": "coal",
+	"email": "unknown",
+	"file": "api/ignoreGlobal.go",
+	"repo": ".",
+	"date": "2024-04-07T14:14:53+03:00"
+},
+{
+	"line": "\tawsToken := \"AKIALALEMEL33243OLIA\"",
+	"commit": "625fc2b9e5c1aff9507872b8f72cb44de63cff61",
+	"offender": "AKIALALEMEL33243OLIA",
+	"reason": "AWS",
+	"commitMsg": "your comment ",
+	"author": "coal",
+	"email": "unknown",
+	"file": "api/ignoreCommit.go",
+	"repo": ".",
+	"date": "2024-04-07T16:17:23+03:00"
+},
+{
+	"line": "\tawsToken := \"AKIALALEMEL33243OLIA\"",
+	"commit": "625fc2b9e5c1aff9507872b8f72cb44de63cff61",
+	"offender": "AKIALALEMEL33243OLIA",
+	"reason": "AWS",
+	"commitMsg": "your comment ",
+	"author": "coal",
+	"email": "unknown",
+	"file": "api/ignoreGlobal.go",
+	"repo": ".",
+	"date": "2024-04-07T16:17:23+03:00"
+},
+{
+	"line": "\tawsToken := \"AKIALALEMEL33243OLIA\"",
+	"commit": "625fc2b9e5c1aff9507872b8f72cb44de63cff61",
+	"offender": "AKIALALEMEL33243OLIA",
+	"reason": "AWS",
+	"commitMsg": "your comment ",
+	"author": "coal",
+	"email": "unknown",
+	"file": "src/api/ignoreCommit.go",
+	"repo": ".",
+	"date": "2024-04-07T16:17:23+03:00"
+},
+{
+	"line": "\tawsToken := \"AKIALALEMEL33243OLIA\"",
+	"commit": "625fc2b9e5c1aff9507872b8f72cb44de63cff61",
+	"offender": "AKIALALEMEL33243OLIA",
+	"reason": "AWS",
+	"commitMsg": "your comment ",
+	"author": "coal",
+	"email": "unknown",
+	"file": "src/api/ignoreGlobal.go",
+	"repo": ".",
+	"date": "2024-04-07T16:17:23+03:00"
+}
+]

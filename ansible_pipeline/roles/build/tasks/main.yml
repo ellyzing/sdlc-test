@@ -1,6 +1,5 @@
 - name: Get gopath
-  ansible.builtin.shell:
-    cmd:  go env GOPATH
+  shell:  go env GOPATH
   register: gopath
 
 - name: Build the Go application

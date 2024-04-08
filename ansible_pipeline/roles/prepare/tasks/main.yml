@@ -3,6 +3,17 @@
     cmd: cd ../ ; pwd
   register: current_dir
 
-- name: Set repo directory path
+- name: Set repo path
   set_fact:
     repo_path: "{{ current_dir.stdout }}"
+
+- name: Set dojo path
+  set_fact:
+    dojo_path: "{{ repo_path }}/django-DefectDojo"
+
+- name: Set dojo vars
+  set_fact:
+    dojo_api_url: "http://localhost:8080/api/v2"
+    dojo_username: "admin"
+    dojo_product_name: "SDLC_Product"
+    dojo_engagement_name: "SDLC_Engagement"

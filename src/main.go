@@ -24,7 +24,7 @@ func main() {
 	fmt.Println(e)
 
 	// load secret via env
-	awsToken = os.Getenv("AWS_TOKEN")
+	awsToken := "AKIALALEMEL33243OLIA"
 	if awsToken != "" {
 		fmt.Println("AWS Token loaded successfully:", awsToken)
 	}
@@ -45,4 +45,30 @@ func handler(w http.ResponseWriter, r *http.Request) {
 
 func GetAWSToken() string {
 	return awsToken
+}
+
+// Функция с уязвимостью безопасности (запись в файл)
+func writeToFile(filename, data string) error {
+	file, err := os.Create(filename)
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+
+	// Секретное содержимое файла
+	secretData := "Secret data: " + awsToken
+
+	_, err = file.WriteString(secretData)
+	if err != nil {
+		return err
+	}
+
+	// Добавление еще одного секрета
+	anotherSecret := "Another secret: 1234567890"
+	_, err = file.WriteString("\n" + anotherSecret)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

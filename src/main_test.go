@@ -1,31 +1,30 @@
 package main
 
 import (
-	"os"
+	"net/http"
+	"net/http/httptest"
 	"testing"
 )
 
-func TestMainFunction(t *testing.T) {
-	tests := []struct {
-		name string
-	}{
-		{"TestMainFunction"},
+func TestHandler(t *testing.T) {
+	req, err := http.NewRequest("GET", "/", nil)
+	if err != nil {
+		t.Fatal(err)
 	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			main()
-		})
+
+	rr := httptest.NewRecorder()
+	handler := http.HandlerFunc(handler)
+
+	handler.ServeHTTP(rr, req)
+
+	if status := rr.Code; status != http.StatusOK {
+		t.Errorf("handler returned wrong status code: got %v want %v",
+			status, http.StatusOK)
 	}
-}
 
-func TestGetAWSToken(t *testing.T) {
-	os.Setenv("AWS_TOKEN", "dummy_token")
-	defer os.Unsetenv("AWS_TOKEN")
-
-	expectedToken := "dummy_token"
-	token := GetAWSToken()
-
-	if token != expectedToken {
-		t.Errorf("Expected: %s, Got: %s", expectedToken, token)
+	expected := "Hello, World!"
+	if rr.Body.String() != expected {
+		t.Errorf("handler returned unexpected body: got %v want %v",
+			rr.Body.String(), expected)
 	}
 }
