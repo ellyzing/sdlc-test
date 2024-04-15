@@ -1,8 +1,17 @@
-- name: Install Gitleaks
-  command: go install github.com/zricethezav/gitleaks@latest
-  args:
-    creates: ~/go/bin/gitleaks
+# - name: Install Gitleaks
+#   command: go install github.com/zricethezav/gitleaks@latest
+#   args:
+#     creates: ~/go/bin/gitleaks
 
+- name: Clone gitleaks repository
+  git:
+    repo: https://github.com/gitleaks/gitleaks.git
+    dest: "{{ repo_path }}/gitleaks"
+
+- name: Build gitleaks
+  shell: make build
+  args:
+    chdir: "{{ repo_path }}/gitleaks"
 
 - name: Create venv for Deepsecrets
   command: python3.12 -m venv "{{ repo_path }}/.venv"
@@ -20,9 +29,11 @@
   register: deepsecrets_output
 
 - name: Check for secrets using Gitleaks
-  command: "~/go/bin/gitleaks --repo-path {{ repo_path }} --report {{ repo_path }}/gl-result.json"
+  command: "{{ repo_path }}/gitleaks/gitleaks detect --source {{ repo_path }} -f json --report-path {{ repo_path }}/gl-result.json"
   ignore_errors: true
   register: gitleaks_output
+
+
 
 - name: Fail if secrets are found
   # fail:
